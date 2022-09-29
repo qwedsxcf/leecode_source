@@ -1,0 +1,59 @@
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int len1=nums1.size(), len2=nums2.size();
+        double mid=(double(len1)+double(len2)+1.0)/2.0;
+
+        if(len1==0){
+            if(len2%2==0){
+                return (double(nums2[len2/2])+double(nums2[len2/2-1]))/2.0;
+            }
+            else{
+                return nums2[(len2-1)/2];
+            }
+        }
+        if(len2==0){
+            if(len1%2==0){
+                return (double(nums1[len1/2])+double(nums1[len1/2-1]))/2;
+            }
+            else{
+                return nums1[(len1-1)/2];
+            }
+        }
+
+        int idx1, idx2, valtop=-1, valtop_1=-1;
+        for(int idx1=0,idx2=0;;){
+            if(idx1<len1&&idx2<len2){
+                if(nums1[idx1]<nums2[idx2]){
+                    valtop_1=valtop;
+                    valtop=nums1[idx1];
+                    idx1++;
+                }
+                else{
+                    valtop_1=valtop;
+                    valtop=nums2[idx2];
+                    idx2++;
+                }
+            }
+            else if(idx1==len1&&idx2<len2){
+                valtop_1=valtop;
+                valtop=nums2[idx2];
+                idx2++;
+            }
+            else if(idx1<len1&&idx2==len2){
+                valtop_1=valtop;
+                valtop=nums1[idx1];
+                idx1++;
+            }
+ 
+            if(idx1+idx2==mid){
+                return valtop;
+            }
+            if(idx1+idx2>mid){
+                return (double(valtop)+double(valtop_1))/2.0;
+            }
+        }
+
+        return 0;
+    }
+};
