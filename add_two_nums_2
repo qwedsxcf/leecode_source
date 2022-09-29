@@ -1,0 +1,97 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        struct ListNode *res = new struct ListNode();
+        struct ListNode *head = res, *pre_res;
+        int plus_1_bite=0;
+        while(l1 != nullptr && l2 !=  nullptr){
+            int value=l1->val + l2->val+plus_1_bite;
+            
+            if (value >= 10){
+                res->val=value-10;
+                plus_1_bite=1;
+            }
+            else{
+                res->val=value;
+                plus_1_bite=0;
+            }
+            l1=l1->next;
+            l2=l2->next;
+            res->next=new struct ListNode();
+            pre_res=res;
+            res=res->next;
+        }
+        if(l1 == nullptr && l2 ==  nullptr){
+            if(plus_1_bite!=0){
+                res->val=plus_1_bite;
+            }
+            else{
+                pre_res->next=nullptr;
+            }
+            return head;
+        }
+        else if(l1 != nullptr && l2 ==  nullptr){
+             while(l1 != nullptr){
+                    int value=l1->val+plus_1_bite;
+                    
+                    if (value >= 10){
+                        res->val=value-10;
+                        plus_1_bite=1;
+                    }
+                    else{
+                        res->val=value;
+                        plus_1_bite=0;
+                    }
+                    l1=l1->next;
+                    res->next=new struct ListNode();
+                    pre_res=res;
+                    res=res->next;
+                }
+                if(plus_1_bite==0){
+                    pre_res->next=nullptr;
+                    return head;
+                }
+                else{
+                    res->val=plus_1_bite;
+                    return head;
+                }
+        }
+        else if(l1 == nullptr && l2 !=  nullptr){
+            while(l2 != nullptr){
+                    int value=l2->val+plus_1_bite;
+                   
+                    if (value >= 10){
+                        res->val=value-10;
+                        plus_1_bite=1;
+                    }
+                    else{
+                        res->val=value;
+                        plus_1_bite=0;
+                    }
+                    l2=l2->next;
+                    res->next=new struct ListNode();
+                    pre_res=res;
+                    res=res->next;
+                }
+                if(plus_1_bite==0){
+                    pre_res->next=nullptr;
+                    return head;
+                }
+                else{
+                    res->val=plus_1_bite;
+                    return head;
+                }
+        }
+        return nullptr;
+    }
+};
