@@ -1,0 +1,126 @@
+class Solution {
+public:
+    //检查一个字符串是不是回文
+    bool ishuiwen(string s, int start, int end){
+        for(int i=0;i<end-start;i++){
+            if(s[start+i]!=s[end-i]){
+                return false;
+            }
+        }
+        return true;
+    }
+    //检查一个字符是不是在该字符串中
+    bool instr(string s, char c){
+        int len=s.length();
+        for(int i=0;i<len;i++){
+            if(s[i]==c){
+                return true;
+            }
+        }
+        return false;
+    }
+    //获取该字符在flag中的顺序
+    int getidx(string s, char c){
+        int len=s.length();
+        for(int i=0;i<len;i++){
+            if(s[i]==c){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    string longestPalindrome(string s) {
+        //首先统计有多少个字符，并将相同的字符设置为相同的数字，同时，记录该字符相距最远的两个字符之间的距离
+        int len=s.length();//获取字符长度
+        if (len==1){//若只包含一个字符，直接返回
+            return s;
+        }
+
+        string snn="";
+        int times[123];
+        for(int i=0;i<123;i++){
+            times[i]=0;
+        }
+        //统计有多少个字符
+        for(int i=0;i<len;i++){
+            if(!instr(snn,s[i])){
+                snn=snn+s[i];
+            }
+            char c=s[i];
+            times[int(c)]++;
+        }
+        int flag=snn.length();//记录有多少个符号
+        if(flag==1){//若只包含一种字符，则直接返回
+            return s;
+        }
+        int max=0;//获取出现次数最多的字符所出现的次数
+        for(int i=0;i<123;i++){
+            max=max<times[i] ? times[i]: max;
+        }
+
+        int **se;
+        se=new int*[flag];
+        for(int i=0;i<flag;i++){
+            se[i]=new int[max];
+        }
+        for(int i=0;i<flag;i++){
+            for(int j=0;j<max;j++){
+                se[i][j]=-1;
+            }
+        }
+
+        //构造一个标记数组，用于记录当前se矩阵应该往什么位置放数据
+        int *temp=new int[flag];
+        for(int i=0;i<flag;i++){
+            temp[i]=0;
+        }
+
+        //构造se矩阵，以备后面判断是不是回文
+        for(int i=0;i<len;i++){
+            se[getidx(snn,s[i])][temp[getidx(snn,s[i])]]=i;
+            temp[getidx(snn,s[i])]++;           
+        }
+
+        /*for(int i=0;i<flag;i++){
+            for(int j=0;j<max;j++){
+                cout<<se[i][j]<<" ";
+            }
+            cout<<endl;
+        }*/
+
+        int huiwenlen=-1;
+        int huiwen_start=-1,huiwen_end=-1;
+        for(int i=0;i<flag;i++){
+            int start=0;
+            int end=-1;
+            for(int j=max-1;j>=0;j--){
+                if(se[i][j]>-1){
+                    end=j;
+                    break;
+                }
+            }
+            //检查是不是回文
+            if(start>=end){
+                if(se[i][end]-se[i][start]>huiwenlen){
+                    huiwenlen=se[i][end]-se[i][start];
+                    huiwen_start=se[i][start];
+                    huiwen_end=se[i][end];
+                }
+            }
+            for(;start<=end;start++){
+                for(int j=start+1;j<=end;j++){
+                    if(ishuiwen(s,se[i][start],se[i][j])){
+                        if(se[i][j]-se[i][start]>huiwenlen){
+                            huiwenlen=se[i][j]-se[i][start];
+                            huiwen_start=se[i][start];
+                            huiwen_end=se[i][j];
+                        }
+                    }
+                }
+            }
+        }
+        cout<<huiwen_start<<huiwen_end;
+        return s.substr(huiwen_start,huiwen_end-huiwen_start+1);
+    }
+};
