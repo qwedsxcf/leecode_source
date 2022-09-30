@@ -1,0 +1,45 @@
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        int len=s.length();
+        if(len<=numRows||numRows==1){
+            return s;
+        }
+        //每一个块，大小为numRows行，numRows-1列
+        //每一个块（除了最后一个）内有2*numRows-2个字母
+        int step=2*numRows-2;
+        int numBlock=len/step+1;
+        int **mat=new int*[numRows];
+        for(int i=0;i<numRows;i++){
+            mat[i]=new int[numBlock*(numRows-1)];
+        }
+        for(int i=0;i<numRows;i++){
+            for(int j=0;j<numBlock*(numRows-1);j++){
+                mat[i][j]=-1;
+            }
+        }
+        for(int i=0;i<numBlock;i++){
+            for(int j=0;j<step;j++){
+                if(i*step+j>=len){
+                    break;
+                }
+                if(j<numRows){
+                    mat[j][i*(numRows-1)]=i*step+j;
+                }
+                else{
+                    mat[numRows-1-(j-numRows+1)][i*(numRows-1)+(j-numRows)+1]=i*step+j;
+                }
+            }
+        }
+        
+        string res="";
+        for(int i=0;i<numRows;i++){
+            for (int j=0;j<numBlock*(numRows-1);j++){
+                if(mat[i][j]>=0){
+                    res=res+s[mat[i][j]];
+                }
+            }
+        }
+        return res;
+    }
+};
