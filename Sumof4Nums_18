@@ -1,0 +1,53 @@
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> ans;
+        if(nums.size()<4){
+            return ans;
+        }
+        sort(nums.begin(), nums.end());
+        int cur=0;
+        while(cur<=nums.size()-4){
+            int cur_r=cur+1;
+            while(cur_r<=nums.size()-3){
+                int left=cur_r+1, right=nums.size()-1;
+                cout<<left<<" "<<right<<endl;
+                while(left<right){
+                    //防止加和之后溢出，全部变成long long型
+                    long long u = static_cast<long long>(nums[cur]);
+                    long long v = static_cast<long long>(nums[cur_r]);
+                    long long w = static_cast<long long>(nums[left]);
+                    long long x = static_cast<long long>(nums[right]);
+                    if(u+v+w+x>target){//如果结果大了，则right--，不怕出现重复的结果
+                        right--;
+                    }
+                    else if(u+v+w+x<target){//如果结果小了，left++
+                        left++;
+                    }
+                    else{
+                        //如果结果正确，就放入
+                        ans.push_back({nums[cur],nums[cur_r],nums[left],nums[right]});
+                        //这样更新是为了防止出现重复结果
+                        while(left<right&&nums[left]==nums[left+1]){
+                            left++;
+                        }
+                        while(left<right&&nums[right]==nums[right-1]){
+                            right--;;
+                        }
+                        left++;
+                        right--;
+                    }
+                }
+                while (cur_r<=nums.size()-3&&nums[cur_r]==nums[cur_r+1]){
+                    cur_r++;
+                }
+                cur_r++;
+            }
+            while (cur<=nums.size()-4&&nums[cur]==nums[cur+1]){
+                cur++;
+            }
+            cur++;
+        }
+        return ans;
+    }
+};
