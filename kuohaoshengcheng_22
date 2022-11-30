@@ -1,0 +1,67 @@
+class Solution {
+public:
+    string str_exchange(string str, int i, int j){
+        string ret="";
+        for(int k=0;k<str.size();k++){
+            if(k==i){
+                ret=ret+str[j];
+            }
+            else if(k==j){
+                ret=ret+str[i];
+            }
+            else{
+                ret=ret+str[k];
+            }
+        }
+        return ret;
+    }
+    vector<string> xiaoyu3(int n) {
+        vector<string> res;
+        string ori="";
+        for(int i=0;i<n;i++){
+            ori=ori+"(";
+        }
+        for(int i=0;i<n;i++){
+            ori=ori+")";
+        }
+        res.push_back(ori);
+        for(int i=1;i<n;i++){
+            for(int j=n;j<2*n-1;j++){
+                res.push_back(str_exchange(ori,i,j));
+            }
+        }
+        return res;
+    }
+    vector<string> generate(int n){
+        vector<string> res;
+        vector<vector<string>> vec;
+        for(int i=0;i<=n-1;i++){
+            if(i<=3){
+                vec.push_back(xiaoyu3(i));
+            }
+            else{
+                vec.push_back(generate(i));
+            }
+        }
+        for(int j=0;j<vec[n-1].size();j++){
+            res.push_back("()"+vec[n-1][j]);
+            res.push_back("("+vec[n-1][j]+")");
+        }
+        for(int i=1;i<=n-2;i++){
+            for(int k=0;k<vec[i].size();k++){
+                for(int l=0;l<vec[n-1-i].size();l++){
+                    res.push_back("("+vec[i][k]+")"+vec[n-1-i][l]);
+                }
+            }
+        }
+        return res;
+    }
+    vector<string> generateParenthesis(int n){
+        if (n<=3){
+            return xiaoyu3(n);
+        }
+        else{
+            return generate(n);
+        }
+    }
+};
