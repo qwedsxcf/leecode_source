@@ -1,0 +1,83 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* p1=head, *p2,*p3,*p4,*p5,*pre=nullptr, *res;
+        if(head==nullptr){
+            return head;
+        }
+        else if(head->next==nullptr){//链表为空或者只有一个节点，则直接返回头指针
+            return head;
+        }
+        else{
+            res=head->next;//否则把第二个节点作为头结点返回
+        }
+        while(p1->next!=nullptr){
+            //p2,p3,p4,p5分别为p1节点后面的节点，若不存在则指针为nullptr
+            p2=p1->next;
+            if(p2->next!=nullptr){
+                p3=p2->next;
+            }
+            else{
+                p3=nullptr;
+            }
+            if(p3!=nullptr){
+                if(p3->next!=nullptr){
+                    p4=p3->next;
+                }
+                else{
+                    p4=nullptr;
+                }
+            }
+            else{
+                p4=nullptr;
+                p5=nullptr;
+            }
+            if(p4!=nullptr){
+                if(p4->next!=nullptr){
+                    p5=p4->next;
+                }
+                else{
+                    p5=nullptr;
+                }
+            }
+            else{
+                p5=nullptr;
+            }
+            if(pre!=nullptr){
+                pre->next=p2;//上一次交换的最后元素指向本次交换的第一个元素p4
+            }
+            //p2节点的next指向节点p1
+            p2->next=p1;
+            if(p4!=nullptr){//若p4不为空
+                p1->next=p4;//p1节点的next指向p4
+                p4->next=p3;//p4节点的next指向p3
+                pre=p3;//为了防止丢失数据，用pre指向p3，记住他
+                p3->next=p5;//本次交换的最后一个元素的next为剩下的未交换元素的第一个
+                p1=p5;//把p1挪到下次交换的第一个元素处
+                if(p1==nullptr){
+                    break;
+                }
+            }
+            else if(p3!=nullptr){
+                p1->next=p3;
+                break;
+            }
+            else{
+                p1->next=nullptr;
+                break;
+            }
+        }
+
+        return res;
+    }
+};
